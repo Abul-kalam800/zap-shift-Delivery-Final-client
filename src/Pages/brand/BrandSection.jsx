@@ -19,7 +19,6 @@ const BrandSection = () => {
           <Swiper
             modules={[Autoplay]}
             slidesPerView={1}
-            loop={true}
             speed={50} // Adjust speed for smoother scroll
             autoplay={{
               delay: 0,

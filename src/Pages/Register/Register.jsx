@@ -2,10 +2,23 @@ import React from "react";
 import authImg from "../../assets/authImage.png";
 import { Link } from "react-router";
 import { useForm } from "react-hook-form";
+import useAuth from "../../hook/useAuth";
 const Register = () => {
-  const { register, handleSubmit,formState:{errors} } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const { creatUser } = useAuth();
+
   const onSubmit = (data) => {
-    console.log(data);
+    creatUser(data.email, data.password)
+      .then((result) => {
+        console.log(result.user);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
   return (
     <div className="p-5 flex justify-around items-center">
@@ -19,15 +32,16 @@ const Register = () => {
               type="text"
               className="input"
               placeholder="Name"
-              {...register("name",{'required':true,'minLength':6})}
-              
+              {...register("name", { required: true, minLength: 6 })}
             />
-            {
-                errors.name?.type==="required" &&<p  className="text-red-600">name requird</p>
-            }
-            {
-                errors.name?.type=== "minLength"&& <span  className="text-red-500">Namw minmum 6 charactors or longer</span>
-            }
+            {errors.name?.type === "required" && (
+              <p className="text-red-600">name requird</p>
+            )}
+            {errors.name?.type === "minLength" && (
+              <span className="text-red-500">
+                Namw minmum 6 charactors or longer
+              </span>
+            )}
             <label className="label">Email</label>
             <input
               type="email"
@@ -45,7 +59,7 @@ const Register = () => {
             <div>
               <a className="link link-hover">Forgot password?</a>
             </div>
-            <button className="btn btn-neutral mt-4 w-full">Login</button>
+            <button className="btn btn-neutral mt-4 w-full">Register</button>
           </fieldset>
         </form>
         <p>
