@@ -4,6 +4,7 @@ import Home from "../Pages/Home/Home";
 import AuthenticLayouts from "../Layouts/AuthenticLayouts";
 import Login from "../Pages/Login/Login";
 import Register from "../Pages/Register/Register";
+import Coverag from "../Pages/Coverag/Coverag";
 
 export const router = createBrowserRouter([
     {
@@ -14,7 +15,13 @@ export const router = createBrowserRouter([
         path:'/',
         index:true,
         Component:Home
-    }]
+    },
+    {
+        path:'/coverage',
+        Component:Coverag,
+        loader: ()=>fetch('/public/warehouses.json')
+    }
+]
 
 },
 {
@@ -28,7 +35,7 @@ export const router = createBrowserRouter([
         {
             path:'/register',
             Component:Register
-        }
-    ]
+        }  
+     ]
 }
 ])
