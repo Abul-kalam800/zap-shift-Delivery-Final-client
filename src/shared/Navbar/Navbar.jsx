@@ -23,6 +23,9 @@ const Navbar = () => {
         <NavLink to="/">Pricing</NavLink>
       </li>
       <li>
+        <NavLink to="/sendpercel">Send percel</NavLink>
+      </li>
+      <li>
         <NavLink to="/">Be a rider</NavLink>
       </li>
     </>

@@ -5,6 +5,7 @@ import AuthenticLayouts from "../Layouts/AuthenticLayouts";
 import Login from "../Pages/Login/Login";
 import Register from "../Pages/Register/Register";
 import Coverag from "../Pages/Coverag/Coverag";
+import SendPercel from "../Pages/sendPercel/SendPercel";
 
 export const router = createBrowserRouter([
     {
@@ -20,6 +21,11 @@ export const router = createBrowserRouter([
         path:'/coverage',
         Component:Coverag,
         loader: ()=>fetch('/public/warehouses.json')
+    },
+    {
+        path:'/sendpercel',
+        Component:SendPercel,
+         loader: ()=>fetch('/public/warehouses.json')
     }
 ]
 
