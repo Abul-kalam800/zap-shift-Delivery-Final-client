@@ -2,21 +2,39 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useLoaderData } from "react-router";
 import Swal from "sweetalert2";
+import useAuth from "../../hook/useAuth";
+import useAxiouSecure from "../../hook/useAxiouSecure";
 
-
+const generateTrackingID = () => {
+  return "TRK" + Date.now() + Math.floor(Math.random() * 1000);
+};
 const SendParcel = () => {
-  const warehouseData= useLoaderData();
-  const { register, handleSubmit, watch, reset, formState: { errors } } = useForm();
+  const { user } = useAuth();
+  const axiouSecure = useAxiouSecure();
+  const warehouseData = useLoaderData();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    reset,
+    formState: { errors },
+  } = useForm();
+
   const [selectedSenderWarehouse, setSelectedSenderWarehouse] = useState("");
-  const [selectedReceiverWarehouse, setSelectedReceiverWarehouse] = useState("");
+  const [selectedReceiverWarehouse, setSelectedReceiverWarehouse] =
+    useState("");
   const [calculatedPrice, setCalculatedPrice] = useState(0);
   const [deliveryType, setDeliveryType] = useState("");
 
   const parcelType = watch("parcelType");
   const weight = watch("weight");
 
-  const senderDistricts = warehouseData.filter(item => item.region === selectedSenderWarehouse);
-  const receiverDistricts = warehouseData.filter(item => item.region === selectedReceiverWarehouse);
+  const senderDistricts = warehouseData.filter(
+    (item) => item.region === selectedSenderWarehouse
+  );
+  const receiverDistricts = warehouseData.filter(
+    (item) => item.region === selectedReceiverWarehouse
+  );
 
   // Dynamic Delivery Type
   useEffect(() => {
@@ -31,10 +49,10 @@ const SendParcel = () => {
 
   // Calculate Price
   useEffect(() => {
-    calculatePrice();
+    totalPrice();
   }, [parcelType, weight, deliveryType]);
 
-  const calculatePrice = () => {
+  const totalPrice = () => {
     let price = 0;
 
     if (parcelType === "document") {
@@ -56,47 +74,68 @@ const SendParcel = () => {
 
     setCalculatedPrice(price);
   };
+  //tracking id****************************************
 
- 
-  const onSubmit = async (data) => {
-    const result = await Swal.fire({
-      title: 'Price Breakdown',
+  //on submit function _____________________________________________________************
+  const loggedInEmail = user?.email;
+  const onSubmit = (data) => {
+    const createdAt = new Date().toISOString(); // ISO format, best for backend and future display
+
+    const parcelData = {
+      ...data,
+      userEmail: loggedInEmail,
+      cost: calculatedPrice,
+      createdAt,
+      trackingId: generateTrackingID(),
+      status: "Pending",
+      PaymentStatus: "unpaid", // Initial status
+      DelivryStatus: "not collected",
+    };
+
+    console.log(parcelData); // Full data with both emails and time
+
+    // Continue SweetAlert or API submission
+
+    const result = Swal.fire({
+      title: "Price Breakdown",
       html: `
-        <div class="text-left">
-          <p><strong>Parcel Type:</strong> ${data.parcelType}</p>
-          <p><strong>Weight:</strong> ${data.weight || 'Document (Any weight)'}</p>
-          <p><strong>Delivery Type:</strong> ${deliveryType === 'within' ? 'Within City' : 'Outside City/District'}</p>
-          ${parcelType === 'non-document' && weight > 3 ? `
-            <p><strong>Base Price:</strong> ৳${deliveryType === 'within' ? '110' : '150'}</p>
-            <p><strong>Extra Weight:</strong> ${(weight - 3)} kg × 40 = ৳${(weight - 3) * 40}</p>
-            ${deliveryType === 'outside' ? `<p><strong>Additional Fixed Charge:</strong> ৳40</p>` : ''}
-          ` : ''}
-          <p class="mt-2"><strong>Total Price:</strong> ৳${calculatedPrice}</p>
-          <p>Do you want to proceed to payment?</p>
-        </div>
-      `,
-      icon: 'info',
+  <div class="text-left">
+    <p><strong>Parcel Type:</strong> ${data.parcelType}</p>
+    <p><strong>Weight:</strong> ${data.weight || "Document (Any weight)"}</p>
+    <p><strong>Delivery Type:</strong> ${
+      deliveryType === "within" ? "Within City" : "Outside City/District"
+    }</p>
+    <p><strong>Logged-in User Email:</strong> ${loggedInEmail}</p>
+    <p><strong>Parcel Creator Email:</strong> ${data.creatorEmail}</p>
+    <p><strong>Order Time:</strong> ${createdAt}</p>
+    <p class="mt-2"><strong>Total Price:</strong> ৳${calculatedPrice}</p>
+    <p>Do you want to proceed to payment?</p>
+  </div>
+`,
+      icon: "info",
       showCancelButton: true,
-      confirmButtonText: 'Proceed to Payment',
-      cancelButtonText: 'Cancel',
+      confirmButtonText: "Proceed to Payment",
+      cancelButtonText: "Cancel",
     });
-
-    if (result.isConfirmed) {
-      Swal.fire({
-        title: 'Order Created!',
-        text: 'Your parcel has been submitted successfully!',
-        icon: 'success',
-        confirmButtonText: 'OK'
-      });
-      reset();
-    } else if (result.dismiss === Swal.DismissReason.cancel) {
-      Swal.fire({
-        title: 'Order Cancelled',
-        text: 'You cancelled the order.',
-        icon: 'error',
-        confirmButtonText: 'OK'
-      });
-    }
+    axiouSecure.post("/parcels", parcelData).then((res) => {
+      console.log(res.data);
+      if (res.data.insertedId) {
+        Swal.fire({
+          title: "Order Created!",
+          text: "Your parcel has been submitted successfully!",
+          icon: "success",
+          confirmButtonText: "OK",
+        });
+        reset();
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire({
+          title: "Order Cancelled",
+          text: "You cancelled the order.",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+      }
+    });
   };
 
   return (

@@ -6,6 +6,7 @@ import Login from "../Pages/Login/Login";
 import Register from "../Pages/Register/Register";
 import Coverag from "../Pages/Coverag/Coverag";
 import SendPercel from "../Pages/sendPercel/SendPercel";
+import Dashboard from "../Layouts/Dashboard";
 
 export const router = createBrowserRouter([
     {
@@ -43,5 +44,10 @@ export const router = createBrowserRouter([
             Component:Register
         }  
      ]
+},
+{
+    path:'/dashboard',
+    Component:Dashboard,
+
 }
 ])
