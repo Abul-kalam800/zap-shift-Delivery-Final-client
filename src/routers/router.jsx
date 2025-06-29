@@ -7,6 +7,9 @@ import Register from "../Pages/Register/Register";
 import Coverag from "../Pages/Coverag/Coverag";
 import SendPercel from "../Pages/sendPercel/SendPercel";
 import Dashboard from "../Layouts/Dashboard";
+import Myparcel from "../Pages/DashboardPage/Myparcel";
+import PrivetRouter from "../Privetrouter/PrivetRouter";
+import Payment from "../Pages/DashboardPage/Payment/Payment";
 
 export const router = createBrowserRouter([
     {
@@ -21,6 +24,7 @@ export const router = createBrowserRouter([
     {
         path:'/coverage',
         Component:Coverag,
+        hydrateFallbackElement: <span className="loading loading-bars loading-xl"></span>,
         loader: ()=>fetch('/public/warehouses.json')
     },
     {
@@ -47,7 +51,17 @@ export const router = createBrowserRouter([
 },
 {
     path:'/dashboard',
-    Component:Dashboard,
+  element:<PrivetRouter><Dashboard></Dashboard></PrivetRouter>,
+    children:[
+        {
+            path:'myparcel',
+            element:<PrivetRouter><Myparcel></Myparcel></PrivetRouter>
+        },
+        {
+            path:'payment',
+            Component:Payment
+        }
+    ]
 
 }
 ])

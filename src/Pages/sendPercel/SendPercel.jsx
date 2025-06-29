@@ -83,7 +83,7 @@ const SendParcel = () => {
 
     const parcelData = {
       ...data,
-      userEmail: loggedInEmail,
+      created_by: loggedInEmail,
       cost: calculatedPrice,
       createdAt,
       trackingId: generateTrackingID(),
@@ -126,7 +126,7 @@ const SendParcel = () => {
           icon: "success",
           confirmButtonText: "OK",
         });
-        reset();
+       
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         Swal.fire({
           title: "Order Cancelled",
