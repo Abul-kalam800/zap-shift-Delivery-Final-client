@@ -12,56 +12,64 @@ import PrivetRouter from "../Privetrouter/PrivetRouter";
 import Payment from "../Pages/DashboardPage/Payment/Payment";
 
 export const router = createBrowserRouter([
-    {
-    path:'/',
-    Component:RootLayouts,
-    children:[{
-
-        path:'/',
-        index:true,
-        Component:Home
-    },
-    {
-        path:'/coverage',
-        Component:Coverag,
-        hydrateFallbackElement: <span className="loading loading-bars loading-xl"></span>,
-        loader: ()=>fetch('/public/warehouses.json')
-    },
-    {
-        path:'/sendpercel',
-        Component:SendPercel,
-         loader: ()=>fetch('/public/warehouses.json')
-    }
-]
-
-},
-{
-    path:'/',
-    Component:AuthenticLayouts,
-    children:[
-        {
-            path:'/login',
-            Component:Login,
-        },
-        {
-            path:'/register',
-            Component:Register
-        }  
-     ]
-},
-{
-    path:'/dashboard',
-  element:<PrivetRouter><Dashboard></Dashboard></PrivetRouter>,
-    children:[
-        {
-            path:'myparcel',
-            element:<PrivetRouter><Myparcel></Myparcel></PrivetRouter>
-        },
-        {
-            path:'payment',
-            Component:Payment
-        }
-    ]
-
-}
-])
+  {
+    path: "/",
+    Component: RootLayouts,
+    children: [
+      {
+        path: "/",
+        index: true,
+        Component: Home,
+      },
+      {
+        path: "/coverage",
+        Component: Coverag,
+        hydrateFallbackElement: (
+          <span className="loading loading-bars loading-xl"></span>
+        ),
+        loader: () => fetch("/public/warehouses.json"),
+      },
+      {
+        path: "/sendpercel",
+        Component: SendPercel,
+        loader: () => fetch("/public/warehouses.json"),
+      },
+    ],
+  },
+  {
+    path: "/",
+    Component: AuthenticLayouts,
+    children: [
+      {
+        path: "/login",
+        Component: Login,
+      },
+      {
+        path: "/register",
+        Component: Register,
+      },
+    ],
+  },
+  {
+    path: "/dashboard",
+    element: (
+      <PrivetRouter>
+        <Dashboard></Dashboard>
+      </PrivetRouter>
+    ),
+    children: [
+      {
+        path: "myparcel",
+        element: (
+          <PrivetRouter>
+            <Myparcel></Myparcel>
+          </PrivetRouter>
+        ),
+      },
+      {
+        path: "payment/:parcelId",
+        Component: Payment,
+      },
+    ],
+  },
+]);

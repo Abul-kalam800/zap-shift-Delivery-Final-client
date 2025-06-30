@@ -53,7 +53,7 @@ const Dashboard = () => {
       <Logo></Logo>
       <li><a>Home</a></li>
       <li><NavLink to="/dashboard/myparcel">My-parcel</NavLink></li>
-      <li><NavLink to="/dashboard/payment">My-payment</NavLink></li>
+     
     </ul>
   </div>
 </div>

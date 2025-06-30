@@ -3,9 +3,12 @@ import React from 'react';
 import useAuth from '../../hook/useAuth';
 import useAxiouSecure from '../../hook/useAxiouSecure';
 import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router';
+
 
 const Myparcel = () => {
     const {user}= useAuth();
+    const navigation = useNavigate();
     const  axiouSecure = useAxiouSecure()
     const {data:parcels=[],refetch}=useQuery({
         queryKey:['my-parcel',user.email],
@@ -51,8 +54,9 @@ const Myparcel = () => {
 };
 
   const handlePay = (parcel) => {
-        alert(`Proceed to payment for Tracking ID: ${parcel.trackingId}`);
+       console.log('payment ')
         // You can link to your payment gateway here
+        navigation(`/dashboard/payment/${parcel}`)
     };
 
     const handleView = (parcel) => {
@@ -86,7 +90,7 @@ const Myparcel = () => {
                             </td>
                             <td className="flex gap-2">
                                 <button onClick={() => handleView(parcel)} className="btn btn-sm btn-info">View</button>
-                                <button onClick={() => handlePay(parcel)} className="btn btn-sm btn-success">Pay</button>
+                                <button onClick={() => handlePay(parcel._id)} className="btn btn-sm btn-success">Pay</button>
                                 <button onClick={() => handleDelete(parcel._id)} className="btn btn-sm btn-error">Delete</button>
                             </td>
                         </tr>
