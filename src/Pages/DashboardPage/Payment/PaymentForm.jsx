@@ -1,8 +1,10 @@
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { useQueries, useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import useAxiouSecure from "../../../hook/useAxiouSecure";
+import useAuth from "../../../hook/useAuth";
+import Swal from "sweetalert2";
 
 const PaymentForm = () => {
   const stripe = useStripe();
@@ -10,21 +12,26 @@ const PaymentForm = () => {
   const { parcelId } = useParams();
   console.log(parcelId);
   const [erromsg, setErromsg] = useState("");
-  const axiouSecure  = useAxiouSecure();
- 
+  const [secessfull, setSecessfull] = useState("");
+  const axiouSecure = useAxiouSecure();
+  const { user } = useAuth();
+  const navigate =useNavigate()
 
-  const {isPending, data: parcelData = {} } = useQuery({
+  const { isPending, data: parcelData = {} } = useQuery({
     queryKey: ["parcels", parcelId],
     queryFn: async () => {
       const res = await axiouSecure.get(`/parcels/${parcelId}`);
-       return res.data;
+      return res.data;
+
     },
   });
- 
+
   console.log(parcelData);
   const price = parcelData.cost;
-  const amountIncens = price*100;
-  console.log(amountIncens)
+  const amountIncens = price * 100;
+  const status=parcelData.PaymentStatus;
+  console.log(status)
+  console.log(amountIncens);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -45,33 +52,42 @@ const PaymentForm = () => {
       setErromsg("");
       console.log("paymentmethed is ok", paymentMethod);
     }
-    const res = await axiouSecure.post('/create-payment-intent',{
-        amountIncens,
-        parcelId
-
-        
-    })
-     console.log('res from intent',res)
+    const res = await axiouSecure.post("/create-payment-intent", {
+      amountIncens,
+      parcelId,
+    });
+    console.log("res from intent", res);
     const clientsecre = res.data.clientSecret;
-    const result = await stripe.confirmCardPayment(clientsecre,{
-        payment_method:{
-            card:elements.getElement( CardElement),
-            billing_details:{
-                name:'kalam'
-            }
-        }
-    })
-    if(result.error){
-        console.log(result.error.message)
-    }else{
-        if(result.paymentIntent.status==='success' )
-            console.log('payment succes')
-
-        }
+    const result = await stripe.confirmCardPayment(clientsecre, {
+      payment_method: {
+        card: elements.getElement(CardElement),
+        billing_details: {
+          name: "kalam",
+        },
+      },
+    });
+    if (result.error) {
+      console.log(result.error.message);
+    } else {
+      if (result.paymentIntent.status === "succeeded")
+        setSecessfull("Payment is successfull");
+      console.log(result);
+      const paymentData = {
+        parcelId,
+        userEmail: user.email, // Add dynamic user email if needed
+        amount: amountIncens,
+        currency: "usd",
+        payment_method: result.paymentIntent.payment_method_types,
+        transjctionId: result.paymentIntent.id,
+      };
+      const paymentRes = await axiouSecure.post("/payment", paymentData);
+      if (paymentRes.data.insertedId) {
+        Swal.fire('Payment Successful!', 'Your payment has been processed successfully.', 'success');
+        navigate('/dashboard/myparcel')
+        console.log("Paymentdata  successfull");
+      }
     }
-   
-    
-  
+  };
 
   return (
     <div>
@@ -88,6 +104,9 @@ const PaymentForm = () => {
           pay ${price}
         </button>
         {erromsg && <p className="text-red-500 mt-5">{erromsg}</p>}
+        {secessfull && (
+          <p className="font-bold text-green-500 mt-4">{secessfull}</p>
+        )}
       </form>
     </div>
   );

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import React from 'react';
+import React, { useState } from 'react';
 import useAuth from '../../hook/useAuth';
 import useAxiouSecure from '../../hook/useAxiouSecure';
 import Swal from 'sweetalert2';
@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router';
 const Myparcel = () => {
     const {user}= useAuth();
     const navigation = useNavigate();
+    const [isDisabled,setIsDisabled]=useState(false)
     const  axiouSecure = useAxiouSecure()
     const {data:parcels=[],refetch}=useQuery({
         queryKey:['my-parcel',user.email],
@@ -57,6 +58,7 @@ const Myparcel = () => {
        console.log('payment ')
         // You can link to your payment gateway here
         navigation(`/dashboard/payment/${parcel}`)
+        setIsDisabled(true)
     };
 
     const handleView = (parcel) => {
@@ -85,12 +87,12 @@ const Myparcel = () => {
                             <td className="capitalize">{parcel.parcelType}</td>
                             <td>{new Date(parcel.createdAt).toLocaleString()}</td>
                             <td>৳{parcel.cost}</td>
-                            <td className={parcel.paymentStatus === 'Paid' ? 'text-green-600' : 'text-red-600'}>
-                                {parcel.paymentStatus || 'Unpaid'}
+                            <td className={parcel.PaymentStatus === 'Paid' ? 'text-green-600 btn-secondary' : 'text-red-600  btn-primary'}>
+                                {parcel.PaymentStatus||'unpaid'}
                             </td>
                             <td className="flex gap-2">
                                 <button onClick={() => handleView(parcel)} className="btn btn-sm btn-info">View</button>
-                                <button onClick={() => handlePay(parcel._id)} className="btn btn-sm btn-success">Pay</button>
+                                <button onClick={() => handlePay(parcel._id)} disabled={isDisabled} className="btn btn-sm btn-success">{isDisabled ? 'Processing...' : 'Pay'} </button>
                                 <button onClick={() => handleDelete(parcel._id)} className="btn btn-sm btn-error">Delete</button>
                             </td>
                         </tr>
