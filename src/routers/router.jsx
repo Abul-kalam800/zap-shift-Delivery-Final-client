@@ -10,6 +10,8 @@ import Dashboard from "../Layouts/Dashboard";
 import Myparcel from "../Pages/DashboardPage/Myparcel";
 import PrivetRouter from "../Privetrouter/PrivetRouter";
 import Payment from "../Pages/DashboardPage/Payment/Payment";
+import PaymentHistroy from "../Pages/DashboardPage/PaymentHistroy";
+import TrackPackeg from "../Pages/DashboardPage/Track packeg/TrackPackeg";
 
 export const router = createBrowserRouter([
   {
@@ -70,6 +72,14 @@ export const router = createBrowserRouter([
         path: "payment/:parcelId",
         Component: Payment,
       },
+      {
+        path:'paymenthistory',
+        Component:PaymentHistroy
+      },
+      {
+        path:'track',
+        Component:TrackPackeg
+      }
     ],
   },
 ]);
