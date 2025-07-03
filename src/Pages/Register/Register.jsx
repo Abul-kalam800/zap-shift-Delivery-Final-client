@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import useAuth from "../../hook/useAuth";
 import axios from "axios";
+import useAxiouSecure from "../../hook/useAxiouSecure";
 const Register = () => {
   const {
     register,
@@ -12,52 +13,65 @@ const Register = () => {
   } = useForm();
   const { creatUser, userProfielInfo } = useAuth();
   const [profielpic, setProfielpic] = useState();
-  const navigate =useNavigate()
+  const navigate = useNavigate();
+  const axiouSecure = useAxiouSecure();
 
   const onSubmit = (data) => {
     creatUser(data.email, data.password)
-      .then((result) => {
+      .then(async (result) => {
         console.log(result.user);
+        const userInfo = {
+          email: data.email,
+          // set default role user
+          role: "user",
+          created_At: new Date().toISOString(),
+          lastLog_At: new Date().toISOString(),
+        };
+        const userRes = await axiouSecure.post("/users", userInfo);
+        console.log("userData is save", userRes.data);
+
         const updateProfiel = {
-          displayName:data.name,
-          photoURL:profielpic
-        }
+          displayName: data.name,
+          photoURL: profielpic,
+        };
         userProfielInfo(updateProfiel)
-        .then(()=>{
-          console.log('profiel update')
-          navigate('/')
-        })
-        .catch(error=>{
-          console.log(error.message)
-        })
+          .then(() => {
+            console.log("profiel update");
+            navigate("/");
+          })
+          .catch((error) => {
+            console.log(error.message);
+          });
       })
       .catch((error) => {
         console.log(error);
       });
   };
   const handleImgupload = async (e) => {
-  const imge = e.target.files[0];
-  console.log(imge);
+    const imge = e.target.files[0];
+    console.log(imge);
 
-  const formData = new FormData();
-  // ✅ Correct key name for imgbb is 'image' (not 'imge')
-  formData.append("image", imge);
+    const formData = new FormData();
+    // ✅ Correct key name for imgbb is 'image' (not 'imge')
+    formData.append("image", imge);
 
-  const imguploadUrl = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_imgeUpload_Key}`;
+    const imguploadUrl = `https://api.imgbb.com/1/upload?key=${
+      import.meta.env.VITE_imgeUpload_Key
+    }`;
 
-  try {
-    const res = await axios.post(imguploadUrl, formData);
-    console.log(res.data);
+    try {
+      const res = await axios.post(imguploadUrl, formData);
+      console.log(res.data);
 
-    if (res.data.success) {
-      const imageUrl = res.data.data.url;
-      setProfielpic(imageUrl)
-      // ✅ Now you can send this imageUrl to your backend or show preview
+      if (res.data.success) {
+        const imageUrl = res.data.data.url;
+        setProfielpic(imageUrl);
+        // ✅ Now you can send this imageUrl to your backend or show preview
+      }
+    } catch (error) {
+      console.error("Image Upload Failed:", error.message);
     }
-  } catch (error) {
-    console.error('Image Upload Failed:', error.message);
-  }
-};
+  };
   return (
     <div className="p-5 flex justify-around items-center">
       <div>

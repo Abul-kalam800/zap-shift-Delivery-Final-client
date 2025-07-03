@@ -2,7 +2,9 @@ import React from "react";
 import authImg from "../../assets/authImage.png";
 import { Link } from "react-router";
 import { useForm } from "react-hook-form";
+import useAuth from "../../hook/useAuth";
 const Login = () => {
+  const { signIn}=useAuth()
   const {
     register,
     handleSubmit,
@@ -10,7 +12,16 @@ const Login = () => {
   } = useForm();
   const onSubmit = (data) => {
     console.log(data);
+    signIn(data.email,data.password)
+    .then(result=>{
+      console.log(result.user)
+    })
+    .catch(error=>{
+      console.log(error.meassage)
+    })
+    
   };
+
 
   return (
     <div className="p-5 flex justify-around items-center">
