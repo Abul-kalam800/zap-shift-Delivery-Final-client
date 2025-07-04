@@ -10,9 +10,11 @@ const Navbar = () => {
       <li>
         <NavLink to="/">Home</NavLink>
       </li>
-      <li>
+    {
+      user &&   <li>
         <NavLink to="/dashboard">Dashboard</NavLink>
       </li>
+    }
       <li>
         <NavLink to="/">Service</NavLink>
       </li>
@@ -23,14 +25,13 @@ const Navbar = () => {
         <NavLink to="/">About us</NavLink>
       </li>
       <li>
-        <NavLink to="/">Pricing</NavLink>
+      <Link to='/bearider'>Be a Rider</Link>
+   
       </li>
       <li>
         <NavLink to="/sendpercel">Send percel</NavLink>
       </li>
-      <li>
-        <NavLink to="/">Be a rider</NavLink>
-      </li>
+    
     </>
   );
   const handleLogout =()=>{
@@ -80,8 +81,7 @@ const Navbar = () => {
       </div>
       <div className="navbar-end">
         {
-          user? <button onClick={handleLogout}>Log Out</button>:<> <Link to='/login' className="btn bg-green-500">Sign up</Link>
-        <Link to='' className="btn border-2">Be a Rider</Link></>
+          user? <button onClick={handleLogout}>Log Out</button>:<> <Link to='/login' className="btn bg-green-500">Sign up</Link></>
         }
        
       </div>

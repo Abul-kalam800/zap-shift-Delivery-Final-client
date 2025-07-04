@@ -12,6 +12,9 @@ import PrivetRouter from "../Privetrouter/PrivetRouter";
 import Payment from "../Pages/DashboardPage/Payment/Payment";
 import PaymentHistroy from "../Pages/DashboardPage/PaymentHistroy";
 import TrackPackeg from "../Pages/DashboardPage/Track packeg/TrackPackeg";
+import BeArider from "../Pages/Be a rider/BeArider";
+import PendingRiders from "../Pages/Be a rider/PendingRiders";
+import ActiveRiders from "../Pages/Be a rider/ActiveRiders";
 
 export const router = createBrowserRouter([
   {
@@ -36,6 +39,10 @@ export const router = createBrowserRouter([
         Component: SendPercel,
         loader: () => fetch("/public/warehouses.json"),
       },
+      {path:'/bearider',
+        element:<PrivetRouter><BeArider></BeArider></PrivetRouter>,
+        loader: () => fetch("/public/warehouses.json"),
+      }
     ],
   },
   {
@@ -79,7 +86,16 @@ export const router = createBrowserRouter([
       {
         path:'track',
         Component:TrackPackeg
+      },
+      {
+        path:'pending-riders',
+        Component:PendingRiders
+      },
+      {
+        path:'active-riders',
+        Component:ActiveRiders
       }
+
     ],
   },
 ]);

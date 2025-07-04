@@ -6,6 +6,8 @@ import {
   FaMoneyCheckAlt,
   FaShippingFast,
   FaUserEdit,
+  FaUserClock,
+  FaUserCheck,
 } from "react-icons/fa";
 import { AiFillHome } from "react-icons/ai";
 
@@ -43,9 +45,9 @@ const Dashboard = () => {
               </div>
               <div className="mx-2 flex-1 px-2 lg:hidden">Navbar Title</div>
             </div>
-           <div className="my-10">
-             <Outlet></Outlet>
-           </div>
+            <div className="my-10">
+              <Outlet></Outlet>
+            </div>
             {/* Page content here */}
           </div>
           <div className="drawer-side">
@@ -138,6 +140,35 @@ const Dashboard = () => {
             >
               <FaUserEdit size={20} /> Update Profile
             </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/dashboard/pending-riders"
+                className={({ isActive }) =>
+                  isActive
+                    ? "flex items-center gap-2 text-blue-500 font-bold bg-gray-100 p-2 rounded"
+                    : "flex items-center gap-2 text-gray-700 hover:text-blue-500 p-2 rounded"
+                }
+              >
+                <FaUserClock   size={20}/>
+                Pending Riders
+              </NavLink>
+            </li>
+
+            {/* Active Riders Link */}
+            <li>
+              <NavLink
+                to="/dashboard/active-riders"
+                className={({ isActive }) =>
+                  isActive
+                    ? "flex items-center gap-2 text-blue-500 font-bold bg-gray-100 p-2 rounded"
+                    : "flex items-center gap-2 text-gray-700 hover:text-blue-500 p-2 rounded"
+                }
+              >
+                <FaUserCheck  size={20} />
+                Active Riders
+              </NavLink>
+          
           </li>
         </ul>
       </div>
