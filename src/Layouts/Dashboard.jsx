@@ -170,6 +170,20 @@ const Dashboard = () => {
               </NavLink>
           
           </li>
+            <li>
+              <NavLink
+                to="/dashboard/make-admin"
+                className={({ isActive }) =>
+                  isActive
+                    ? "flex items-center gap-2 text-blue-500 font-bold bg-gray-100 p-2 rounded"
+                    : "flex items-center gap-2 text-gray-700 hover:text-blue-500 p-2 rounded"
+                }
+              >
+                <FaUserCheck  size={20} />
+               MakeAdmin
+              </NavLink>
+          
+          </li>
         </ul>
       </div>
     </div>

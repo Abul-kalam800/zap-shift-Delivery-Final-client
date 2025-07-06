@@ -1,10 +1,14 @@
 import React from "react";
 import authImg from "../../assets/authImage.png";
-import { Link } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import useAuth from "../../hook/useAuth";
+import Swal from "sweetalert2";
 const Login = () => {
-  const { signIn}=useAuth()
+  const { signIn } = useAuth();
+  const location = useLocation();
+  const navigation = useNavigate();
+  const form = location.state?.form || "/";
   const {
     register,
     handleSubmit,
@@ -12,16 +16,22 @@ const Login = () => {
   } = useForm();
   const onSubmit = (data) => {
     console.log(data);
-    signIn(data.email,data.password)
-    .then(result=>{
-      console.log(result.user)
-    })
-    .catch(error=>{
-      console.log(error.meassage)
-    })
-    
+    signIn(data.email, data.password)
+      .then((result) => {
+        console.log(result.user);
+        navigation(form)
+        Swal.fire({
+          position: "top-center",
+          icon: "success",
+          title: "Your login successfully",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      })
+      .catch((error) => {
+        console.log(error.meassage);
+      });
   };
-
 
   return (
     <div className="p-5 flex justify-around items-center">
@@ -40,13 +50,13 @@ const Login = () => {
             <label className="label">Password</label>
             <input
               type="password"
-              {...register("password", { 'required': true, 'minLength': 6 })}
+              {...register("password", { required: true, minLength: 6 })}
               className="input"
               placeholder="Password"
             />
-            {errors.password?.type === 'minLength' && 
+            {errors.password?.type === "minLength" && (
               <p className="text-red-600">password requird</p>
-            }
+            )}
             <div>
               <a className="link link-hover">Forgot password?</a>
             </div>
@@ -55,7 +65,7 @@ const Login = () => {
         </form>
         <p>
           Don't have an account{" "}
-          <Link to="/register" className="text-blue-600">
+          <Link to="/register" state={form} className="text-blue-600">
             Register
           </Link>
         </p>

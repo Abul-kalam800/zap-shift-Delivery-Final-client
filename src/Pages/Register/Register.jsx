@@ -1,11 +1,16 @@
 import React, { useState } from "react";
 import authImg from "../../assets/authImage.png";
-import { Link, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import useAuth from "../../hook/useAuth";
 import axios from "axios";
 import useAxiouSecure from "../../hook/useAxiouSecure";
+import Swal from "sweetalert2";
+import useAxioes from "../../hook/useAxioes";
 const Register = () => {
+  const location = useLocation();
+  const navigation = useNavigate();
+  const form = location.state?.from || "/";
   const {
     register,
     handleSubmit,
@@ -13,40 +18,53 @@ const Register = () => {
   } = useForm();
   const { creatUser, userProfielInfo } = useAuth();
   const [profielpic, setProfielpic] = useState();
-  const navigate = useNavigate();
-  const axiouSecure = useAxiouSecure();
+
+  const axiosInstance = useAxioes();
 
   const onSubmit = (data) => {
     creatUser(data.email, data.password)
       .then(async (result) => {
         console.log(result.user);
+
+        console.log(data.name);
         const userInfo = {
           email: data.email,
-          // set default role user
           role: "user",
           created_At: new Date().toISOString(),
           lastLog_At: new Date().toISOString(),
         };
-        const userRes = await axiouSecure.post("/users", userInfo);
+        const userRes = await axiosInstance.post("/users", userInfo);
         console.log("userData is save", userRes.data);
 
+        // update profile 
         const updateProfiel = {
           displayName: data.name,
           photoURL: profielpic,
         };
+        console.log(updateProfiel);
+
         userProfielInfo(updateProfiel)
           .then(() => {
             console.log("profiel update");
-            navigate("/");
           })
           .catch((error) => {
             console.log(error.message);
           });
+
+        navigation(form);
+        Swal.fire({
+          position: "top-center",
+          icon: "success",
+          title: "Your work has been saved",
+          showConfirmButton: false,
+          timer: 1500,
+        });
       })
       .catch((error) => {
         console.log(error);
       });
   };
+
   const handleImgupload = async (e) => {
     const imge = e.target.files[0];
     console.log(imge);
@@ -84,16 +102,9 @@ const Register = () => {
               type="text"
               className="input"
               placeholder="Name"
-              {...register("name", { required: true, minLength: 6 })}
+              {...register("name")}
             />
-            {errors.name?.type === "required" && (
-              <p className="text-red-600">name requird</p>
-            )}
-            {errors.name?.type === "minLength" && (
-              <span className="text-red-500">
-                Namw minmum 6 charactors or longer
-              </span>
-            )}
+
             <label className="label">Email</label>
             <input
               type="email"
@@ -118,7 +129,9 @@ const Register = () => {
             <div>
               <a className="link link-hover">Forgot password?</a>
             </div>
-            <button className="btn btn-neutral mt-4 w-full">Register</button>
+            <button className="btn btn-neutral mt-4 w-full " type="submit">
+              Register
+            </button>
           </fieldset>
         </form>
         <p>

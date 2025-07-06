@@ -15,6 +15,7 @@ import TrackPackeg from "../Pages/DashboardPage/Track packeg/TrackPackeg";
 import BeArider from "../Pages/Be a rider/BeArider";
 import PendingRiders from "../Pages/Be a rider/PendingRiders";
 import ActiveRiders from "../Pages/Be a rider/ActiveRiders";
+import MakeAdmin from "../Pages/DashboardPage/makeAdmin.jsx/MakeAdmin";
 
 export const router = createBrowserRouter([
   {
@@ -94,6 +95,10 @@ export const router = createBrowserRouter([
       {
         path:'active-riders',
         Component:ActiveRiders
+      },
+      {
+        path:'make-admin',
+        Component:MakeAdmin
       }
 
     ],

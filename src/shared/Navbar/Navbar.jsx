@@ -2,19 +2,20 @@ import React from "react";
 import { Link, NavLink } from "react-router";
 import Logo from "../../componets/Logo";
 import useAuth from "../../hook/useAuth";
+import Swal from "sweetalert2";
 
 const Navbar = () => {
-  const {user,logOut} =useAuth()
+  const { user, logOut } = useAuth();
   const navlinks = (
     <>
       <li>
         <NavLink to="/">Home</NavLink>
       </li>
-    {
-      user &&   <li>
-        <NavLink to="/dashboard">Dashboard</NavLink>
-      </li>
-    }
+      {user && (
+        <li>
+          <NavLink to="/dashboard">Dashboard</NavLink>
+        </li>
+      )}
       <li>
         <NavLink to="/">Service</NavLink>
       </li>
@@ -25,25 +26,30 @@ const Navbar = () => {
         <NavLink to="/">About us</NavLink>
       </li>
       <li>
-      <Link to='/bearider'>Be a Rider</Link>
-   
+        <Link to="/bearider">Be a Rider</Link>
       </li>
       <li>
         <NavLink to="/sendpercel">Send percel</NavLink>
       </li>
-    
     </>
   );
-  const handleLogout =()=>{
-
+  const handleLogout = () => {
     logOut()
-    .then(()=>{
-      console.log("signOut successfully")
-    })
-    .catch(error=>{
-      console.log(error)
-    })
-  }
+      .then(() => {
+        console.log("signOut successfully");
+
+        Swal.fire({
+          position: "top-center",
+          icon: "success",
+          title: "Your logOut has been done",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   return (
     <div className="navbar shadow-sm">
       <div className="navbar-start">
@@ -72,18 +78,25 @@ const Navbar = () => {
             {navlinks}
           </ul>
         </div>
-      
-            <Logo></Logo>
-       
+
+        <Logo></Logo>
       </div>
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">{navlinks}</ul>
       </div>
       <div className="navbar-end">
-        {
-          user? <button onClick={handleLogout}>Log Out</button>:<> <Link to='/login' className="btn bg-green-500">Sign up</Link></>
-        }
-       
+        {user ? (
+          <button onClick={handleLogout} className="cursor-pointer">
+            Log Out
+          </button>
+        ) : (
+          <>
+            {" "}
+            <Link to="/login" className="btn bg-green-500 cursor-pointer">
+              Sign up
+            </Link>
+          </>
+        )}
       </div>
     </div>
   );

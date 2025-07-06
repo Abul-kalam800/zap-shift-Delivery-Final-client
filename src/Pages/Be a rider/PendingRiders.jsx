@@ -37,7 +37,7 @@ const PendingRiders = () => {
   };
 
   // Confirm Rider API
-  const handleConfirm = (riderId) => {
+  const handleConfirm = (riderId,email) => {
     Swal.fire({
       title: "Are you sure?",
       text: "Do you want to confirm this rider?",
@@ -49,6 +49,7 @@ const PendingRiders = () => {
         axiouSecure
           .patch(`/riders/${riderId}/status`, {
             status: "Active",
+            email
           })
           .then(() => {
             Swal.fire("Confirmed!", "Rider has been confirmed.", "success");
@@ -140,13 +141,13 @@ const PendingRiders = () => {
                     View
                   </button>
                   <button
-                    onClick={() => handleConfirm(rider._id)}
+                    onClick={() => handleConfirm(rider._id, rider.email)}
                     className="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600"
                   >
                     Confirm
                   </button>
                   <button
-                    onClick={() => handleReject(rider._id)}
+                    onClick={() => handleReject(rider._id,rider.email)}
                     className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600"
                   >
                     Reject
