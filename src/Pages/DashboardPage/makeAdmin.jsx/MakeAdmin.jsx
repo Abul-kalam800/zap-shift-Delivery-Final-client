@@ -25,7 +25,7 @@ const MakeAdmin = () => {
     try {
       const res = await axiosInstance.patch('/users/role',{email, role:newRole});
       if (res.data) {
-        alert(res.data.newRole);
+        alert(res.data.role);
         refetch(); // Refresh user list
       }
       console.log(res.data.role)

@@ -10,8 +10,12 @@ import {
   FaUserCheck,
 } from "react-icons/fa";
 import { AiFillHome } from "react-icons/ai";
+import useRoleUser from "../hook/useRoleuser";
 
 const Dashboard = () => {
+
+  const {role}= useRoleUser()
+  console.log(role)
   return (
     <div className="drawer lg:drawer-open">
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
@@ -141,7 +145,10 @@ const Dashboard = () => {
               <FaUserEdit size={20} /> Update Profile
             </NavLink>
             </li>
-            <li>
+            {
+              !role || role==='admin' &&
+              <>
+              <li>
               <NavLink
                 to="/dashboard/pending-riders"
                 className={({ isActive }) =>
@@ -184,6 +191,8 @@ const Dashboard = () => {
               </NavLink>
           
           </li>
+              </>
+            }
         </ul>
       </div>
     </div>
