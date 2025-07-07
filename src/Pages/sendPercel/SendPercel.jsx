@@ -89,7 +89,7 @@ const SendParcel = () => {
       trackingId: generateTrackingID(),
       status: "Pending",
       PaymentStatus: "unpaid", // Initial status
-      DelivryStatus: "not collected",
+      DelivryStatus: "not_collected",
     };
 
     console.log(parcelData); // Full data with both emails and time

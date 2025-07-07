@@ -8,14 +8,14 @@ import {
   FaUserEdit,
   FaUserClock,
   FaUserCheck,
+  FaMotorcycle,
 } from "react-icons/fa";
 import { AiFillHome } from "react-icons/ai";
 import useRoleUser from "../hook/useRoleuser";
 
 const Dashboard = () => {
-
-  const {role}= useRoleUser()
-  console.log(role)
+  const { role } = useRoleUser();
+  console.log(role);
   return (
     <div className="drawer lg:drawer-open">
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
@@ -144,55 +144,67 @@ const Dashboard = () => {
             >
               <FaUserEdit size={20} /> Update Profile
             </NavLink>
-            </li>
-            {
-              !role || role==='admin' &&
+          </li>
+          {!role ||
+            (role === "admin" && (
               <>
-              <li>
-              <NavLink
-                to="/dashboard/pending-riders"
-                className={({ isActive }) =>
-                  isActive
-                    ? "flex items-center gap-2 text-blue-500 font-bold bg-gray-100 p-2 rounded"
-                    : "flex items-center gap-2 text-gray-700 hover:text-blue-500 p-2 rounded"
-                }
-              >
-                <FaUserClock   size={20}/>
-                Pending Riders
-              </NavLink>
-            </li>
+                <li>
+                  <NavLink
+                    to="/dashboard/assign-riders"
+                    className={({ isActive }) =>
+                      isActive
+                        ? "flex items-center gap-2 text-blue-500 font-bold bg-gray-100 p-2 rounded"
+                        : "flex items-center gap-2 text-gray-700 hover:text-blue-500 p-2 rounded"
+                    }
+                  >
+                    <FaMotorcycle size={20} />
+                    Assign Riders
+                  </NavLink>
+                </li>
 
-            {/* Active Riders Link */}
-            <li>
-              <NavLink
-                to="/dashboard/active-riders"
-                className={({ isActive }) =>
-                  isActive
-                    ? "flex items-center gap-2 text-blue-500 font-bold bg-gray-100 p-2 rounded"
-                    : "flex items-center gap-2 text-gray-700 hover:text-blue-500 p-2 rounded"
-                }
-              >
-                <FaUserCheck  size={20} />
-                Active Riders
-              </NavLink>
-          
-          </li>
-            <li>
-              <NavLink
-                to="/dashboard/make-admin"
-                className={({ isActive }) =>
-                  isActive
-                    ? "flex items-center gap-2 text-blue-500 font-bold bg-gray-100 p-2 rounded"
-                    : "flex items-center gap-2 text-gray-700 hover:text-blue-500 p-2 rounded"
-                }
-              >
-                <FaUserCheck  size={20} />
-               MakeAdmin
-              </NavLink>
-          
-          </li>
+                <li>
+                  <NavLink
+                    to="/dashboard/pending-riders"
+                    className={({ isActive }) =>
+                      isActive
+                        ? "flex items-center gap-2 text-blue-500 font-bold bg-gray-100 p-2 rounded"
+                        : "flex items-center gap-2 text-gray-700 hover:text-blue-500 p-2 rounded"
+                    }
+                  >
+                    <FaUserClock size={20} />
+                    Pending Riders
+                  </NavLink>
+                </li>
+
+                {/* Active Riders Link */}
+                <li>
+                  <NavLink
+                    to="/dashboard/active-riders"
+                    className={({ isActive }) =>
+                      isActive
+                        ? "flex items-center gap-2 text-blue-500 font-bold bg-gray-100 p-2 rounded"
+                        : "flex items-center gap-2 text-gray-700 hover:text-blue-500 p-2 rounded"
+                    }
+                  >
+                    <FaUserCheck size={20} />
+                    Active Riders
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/dashboard/make-admin"
+                    className={({ isActive }) =>
+                      isActive
+                        ? "flex items-center gap-2 text-blue-500 font-bold bg-gray-100 p-2 rounded"
+                        : "flex items-center gap-2 text-gray-700 hover:text-blue-500 p-2 rounded"
+                    }
+                  >
+                    <FaUserCheck size={20} />
+                    MakeAdmin
+                  </NavLink>
+                </li>
               </>
-            }
+            ))}
         </ul>
       </div>
     </div>
